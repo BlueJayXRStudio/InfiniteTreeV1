@@ -1,2 +1,3 @@
 **/.DS_Store
-# **/*.meta
+# just top level meta's
+/*.meta
