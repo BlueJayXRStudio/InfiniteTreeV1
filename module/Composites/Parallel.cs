@@ -21,7 +21,7 @@ public class Parallel : Behavior
         throw new System.NotImplementedException();
     }
 
-    public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+    public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
     {
         // int fail_count = 0;
         foreach (TaskStackMachine tree in trees) {

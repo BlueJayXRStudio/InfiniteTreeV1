@@ -11,7 +11,7 @@ public class ToWaypoint : Behavior
         this.waypoint = waypoint;
     }
 
-    public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+    public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
     {        
         // Debug.Log("Traveling to Way Point");
         Vector3 ParentPos = waypoint.transform.position;

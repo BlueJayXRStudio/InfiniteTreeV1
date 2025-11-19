@@ -11,7 +11,7 @@ namespace InfiniteTree
             Patient = patient;
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
         {
             Patient.transform.SetParent(null);
             Patient.GetComponent<CivilianAttributes>().ForceWake = true;

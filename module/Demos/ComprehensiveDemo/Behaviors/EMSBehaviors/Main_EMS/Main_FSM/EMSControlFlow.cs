@@ -8,7 +8,7 @@ namespace InfiniteTree
     {
         public EMSControlFlow(GameObject go) : base(go) { }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
         {
             memory.Push(this);
             GameObject Call = ExperimentBlackboard.Instance.GetCall;

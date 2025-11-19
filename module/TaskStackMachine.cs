@@ -14,7 +14,8 @@ public class TaskStackMachine
 {
     public GameObject DriverObject;
     public Stack<Behavior> Memory;
-    private Status Message = Status.NULL;
+    private Status LastMessage = Status.NULL;
+    private Behavior LastTask = null;
 
     public TaskStackMachine(GameObject go) {
         DriverObject = go;
@@ -23,19 +24,21 @@ public class TaskStackMachine
 
     public Status Drive() {
         if (Memory.Count == 0) 
-            return Message;
+            return LastMessage;
 
-        Message = Memory.Pop().Step(Memory, DriverObject, Message);
+        var curr_task = Memory.Pop();
+        LastMessage = curr_task.Step(Memory, DriverObject, LastMessage, LastTask);
+        LastTask = curr_task;
 
-        return Message;
+        return LastMessage;
     }
 
     public void AddBehavior(Behavior behavior) {
         Memory.Push(behavior);
-        Message = Status.NULL;
+        LastMessage = Status.NULL;
     }
 
-    public Status GetMessage => Message;
+    public Status GetMessage => LastMessage;
     public int GetStackCount => Memory.Count;
     public bool ProgramFinish => Memory.Count == 0;
 }

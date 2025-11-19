@@ -15,7 +15,7 @@ public class Inverter : Behavior
         throw new System.NotImplementedException();
     }
 
-    public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+    public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
     {
         if (message == Status.NULL) {
             memory.Push(this);

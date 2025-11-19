@@ -17,7 +17,7 @@ public class Selector : Behavior
         }
     }
 
-    public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+    public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
     {
         if (message == Status.SUCCESS) {
             Finished = true;

@@ -11,7 +11,7 @@ public class RotateBehavior : Behavior
         throw new System.NotImplementedException();
     }
 
-    public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+    public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
     {
         go.transform.rotation = Quaternion.Euler(0, 180 * Time.deltaTime, 0) * go.transform.rotation;
         memory.Push(this);

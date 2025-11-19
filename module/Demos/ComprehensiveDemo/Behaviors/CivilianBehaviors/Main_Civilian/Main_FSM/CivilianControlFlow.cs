@@ -11,7 +11,7 @@ namespace InfiniteTree
 
         public CivilianControlFlow(GameObject go) : base(go) {}
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
         {
             // push this state immediately back in, because we know
             // we will always come back to this state.

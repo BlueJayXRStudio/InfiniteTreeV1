@@ -16,7 +16,7 @@ namespace InfiniteTree
         }
 
         // bool isPickedUp = false;        
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
         {
             Behavior nextState = this;
 

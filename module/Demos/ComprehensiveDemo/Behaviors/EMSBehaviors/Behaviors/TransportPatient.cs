@@ -31,7 +31,7 @@ namespace InfiniteTree
             throw new System.NotImplementedException();
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
         {
             go.GetComponent<EMSAttributes>().lightsController.transform.gameObject.SetActive(true);
             if (message == Status.SUCCESS) {

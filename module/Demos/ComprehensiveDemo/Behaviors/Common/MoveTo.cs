@@ -29,7 +29,7 @@ namespace InfiniteTree
             return Status.FAILURE;
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
         {
             if (!(message == Status.RUNNING || message == Status.NULL)) {
                 Finished = true;

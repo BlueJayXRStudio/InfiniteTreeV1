@@ -14,7 +14,7 @@ namespace InfiniteTree
             return Status.SUCCESS;
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
         {
             return CheckRequirement();
         }

@@ -7,7 +7,7 @@ public abstract class Behavior
     public GameObject DriverObject;
     public Behavior(GameObject go) => DriverObject = go;
 
-    public abstract Status Step(Stack<Behavior> memory, GameObject go, Status message);
+    public abstract Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task);
     public abstract Status CheckRequirement();
 
     public Status TreeRequirement(Stack<Behavior> memory) {

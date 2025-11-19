@@ -24,7 +24,7 @@ namespace InfiniteTree
             this.with_req = with_req;
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
         {
             if (with_req) {
                 var result = TreeRequirement(memory);

@@ -11,7 +11,7 @@ namespace InfiniteTree
             Patient = patient;
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message)
+        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
         {
             Patient.transform.position = new Vector3(go.transform.position.x ,Patient.transform.position.y, go.transform.position.z);
             Patient.transform.SetParent(go.transform);
