@@ -7,12 +7,12 @@ public class Parallel : Behavior
 {
     List<TaskStackMachine> trees;
 
-    public Parallel(List<Behavior> ParallelActions, GameObject go) : base(go) {
+    public Parallel(TaskStackMachine tree, List<Behavior> ParallelActions) : base(tree) {
         trees = new();
         foreach (Behavior action in ParallelActions) {
-            var tree = new TaskStackMachine(null);
-            tree.AddBehavior(action);
-            trees.Add(tree);
+            var _tree = new TaskStackMachine(tree.MainObject);
+            _tree.AddBehavior(action);
+            trees.Add(_tree);
         }
     }
 
@@ -21,26 +21,16 @@ public class Parallel : Behavior
         throw new System.NotImplementedException();
     }
 
-    public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+    public override IEnumerable<Status> Run()
     {
-        // int fail_count = 0;
-        foreach (TaskStackMachine tree in trees) {
-            tree.DriverObject = go;
-            var result = tree.Drive();
+        foreach (TaskStackMachine _tree in trees) {
+            var result = _tree.Drive();
             if (result != Status.RUNNING) {
-                return result;
+                yield return result;
             }
-            // else if (result == Status.FAILURE) {
-            //     fail_count++;
-            // }
         }
 
-        // if (fail_count == trees.Count) {
-        //     memory.Push(this);
-        //     return Status.FAILURE;
-        // }
-        
-        memory.Push(this);
-        return Status.RUNNING;
+        tree.Memory.Push(this);
+        yield return Status.RUNNING;
     }
 }

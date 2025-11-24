@@ -5,7 +5,7 @@ namespace InfiniteTree
 {
     internal class a_Withdraw : Behavior
     {
-        public a_Withdraw(GameObject go) : base(go)
+        public a_Withdraw(TaskStackMachine tree) : base(tree)
         {
         }
 
@@ -14,16 +14,16 @@ namespace InfiniteTree
             throw new System.NotImplementedException();
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            var result = TreeRequirement(memory);
+            var result = TreeRequirement();
             if (result != Status.RUNNING) {
-                return result;
+                yield return result;
             }
             
             Debug.Log("Retrieved cash");
-            DriverObject.GetComponent<Attributes>().Cash += 50;
-            return Status.SUCCESS;
+            tree.MainObject.GetComponent<Attributes>().Cash += 50;
+            yield return Status.SUCCESS;
         }
     }
 }

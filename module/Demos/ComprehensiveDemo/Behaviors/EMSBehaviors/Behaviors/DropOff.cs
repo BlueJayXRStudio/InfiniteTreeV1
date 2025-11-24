@@ -7,16 +7,16 @@ namespace InfiniteTree
     {
         private GameObject Patient;
 
-        public DropOff(GameObject patient) : base(null) {
+        public DropOff(TaskStackMachine tree, GameObject patient) : base(tree) {
             Patient = patient;
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
             Patient.transform.SetParent(null);
             Patient.GetComponent<CivilianAttributes>().ForceWake = true;
 
-            return Status.SUCCESS;
+            yield return Status.SUCCESS;
         }
 
         public override Status CheckRequirement()

@@ -6,48 +6,45 @@ using UnityEngine;
 public class Sequence : Behavior
 {
     protected bool Finished = false;
-    protected Queue<Behavior> Actions = new();
-    protected List<Behavior> PrevActions = new();
+    protected List<Behavior> Tasks = new();
+    protected int idx = 0;
 
-    public Sequence(List<Behavior> ToPopulate, GameObject go) : base(go) {
-        if (ToPopulate == null) return;
-
-        foreach (Behavior action in ToPopulate) {
-            Actions.Enqueue(action);
-        }
+    public Sequence(TaskStackMachine tree, List<Behavior> tasks) : base(tree) {
+        if (tasks == null) return;
+        Tasks = tasks;
     }
 
-    public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+    public override IEnumerable<Status> Run()
     {
-        if (message == Status.FAILURE) {
-            Finished = true;
-            return Status.FAILURE;
+        while (idx < Tasks.Count)
+        {
+            tree.Memory.Push(this);
+            tree.Memory.Push(Tasks[idx]);
+            yield return Status.NULL;
+            
+            if (tree.LastMessage == Status.FAILURE)
+            {
+                Finished = true;
+                yield return Status.FAILURE;
+            }
+            idx++;
         }
-        if (Actions.Count == 0) {
-            Finished = true;
-            return Status.SUCCESS;
-        }
-
-        memory.Push(this);
-        var nextAction = Actions.Dequeue();
-        PrevActions.Add(nextAction);
-        memory.Push(nextAction);
-        return Status.NULL;
+        Finished = true;
+        yield return Status.SUCCESS;
     }
-
+    
     public override Status CheckRequirement()
     {
         if (Finished)
             return Status.FAILURE;
 
-        for (int i = 0; i < PrevActions.Count - 1; i++) {
-            var result = PrevActions[i].CheckRequirement();
+        for (int i = 0; i < idx; i++) {
+            var result = Tasks[i].CheckRequirement();
             if (result != Status.SUCCESS)
                 return Status.FAILURE;
         }
 
         return Status.RUNNING;
     }
-
 
 }

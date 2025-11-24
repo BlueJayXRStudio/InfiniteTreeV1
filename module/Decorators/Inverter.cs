@@ -6,8 +6,9 @@ public class Inverter : Behavior
 {
     Behavior ToInvert;
     
-    public Inverter(Behavior toInvert, GameObject go) : base(go) {
-        ToInvert = toInvert;
+    public Inverter(TaskStackMachine tree, Behavior to_invert) : base(tree)
+    {
+        ToInvert = to_invert;
     }
 
     public override Status CheckRequirement()
@@ -15,16 +16,14 @@ public class Inverter : Behavior
         throw new System.NotImplementedException();
     }
 
-    public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+    public override IEnumerable<Status> Run()
     {
-        if (message == Status.NULL) {
-            memory.Push(this);
-            memory.Push(ToInvert);
-            return Status.NULL; }
-        else if (message == Status.SUCCESS)
-            return Status.FAILURE;
-        else 
-            return Status.SUCCESS;
+        tree.Memory.Push(this);
+        tree.Memory.Push(ToInvert);
+        yield return Status.NULL; 
+        
+        if (tree.LastMessage == Status.SUCCESS)
+            yield return Status.FAILURE;
+        yield return Status.SUCCESS;
     }
-
 }

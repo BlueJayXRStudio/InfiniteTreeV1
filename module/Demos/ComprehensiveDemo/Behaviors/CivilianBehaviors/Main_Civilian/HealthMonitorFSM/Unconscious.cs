@@ -6,7 +6,7 @@ namespace InfiniteTree
 {
     public class Unconscious : Behavior
     {
-        public Unconscious(GameObject go) : base(go)
+        public Unconscious(TaskStackMachine tree) : base(tree)
         {
         }
 
@@ -16,17 +16,20 @@ namespace InfiniteTree
         }
 
         // bool isPickedUp = false;        
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            Behavior nextState = this;
+            while (true)
+            {
+                Behavior nextState = this;
 
-            if (go.GetComponent<CivilianAttributes>().ForceWake) {
-                Debug.Log("Waking up. Starting Recovery :D");
-                nextState = (Recover)go.GetComponent<CivilianBehaviorFactory>().GetState(typeof(Recover), go);
+                if (tree.MainObject.GetComponent<CivilianAttributes>().ForceWake) {
+                    Debug.Log("Waking up. Starting Recovery :D");
+                    nextState = (Recover) tree.MainObject.GetComponent<CivilianBehaviorFactory>().GetState(typeof(Recover), tree.MainObject);
+                }
+
+                tree.Memory.Push(nextState);
+                yield return Status.NULL;
             }
-
-            memory.Push(nextState);
-            return Status.NULL;
         }
     }
 }

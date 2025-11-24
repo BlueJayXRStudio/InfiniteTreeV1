@@ -6,7 +6,7 @@ namespace InfiniteTree
 {
     public class Recover : Behavior
     {
-        public Recover(GameObject go) : base(go)
+        public Recover(TaskStackMachine tree) : base(tree)
         {
         }
 
@@ -15,24 +15,27 @@ namespace InfiniteTree
             throw new System.NotImplementedException();
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            Behavior nextState = this;
+            while (true)
+            {
+                Behavior nextState = this;
 
-            if (go.GetComponent<CivilianAttributes>().ForceWake)
-                go.GetComponent<CivilianAttributes>().ForceWake = false;
+                if (tree.MainObject.GetComponent<CivilianAttributes>().ForceWake)
+                    tree.MainObject.GetComponent<CivilianAttributes>().ForceWake = false;
 
-            if (go.GetComponent<Attributes>().Health > 75) {
-                Debug.Log("Recovered and resuming activity");
-                go.GetComponent<CivilianDriver>().SwitchTree();
-                go.GetComponent<CivilianDriver>().ResetTree();
-                nextState = (CivilianIdle) go.GetComponent<CivilianBehaviorFactory>().GetState(typeof(CivilianIdle), go);
+                if (tree.MainObject.GetComponent<Attributes>().Health > 75) {
+                    Debug.Log("Recovered and resuming activity");
+                    tree.MainObject.GetComponent<CivilianDriver>().SwitchTree();
+                    tree.MainObject.GetComponent<CivilianDriver>().ResetTree();
+                    nextState = (CivilianIdle) tree.MainObject.GetComponent<CivilianBehaviorFactory>().GetState(typeof(CivilianIdle), tree.MainObject);
+                }
+                
+                tree.MainObject.GetComponent<Attributes>().Health += 10f * Time.deltaTime;
+
+                tree.Memory.Push(nextState);
+                yield return Status.NULL;
             }
-            
-            go.GetComponent<Attributes>().Health += 10f * Time.deltaTime;
-
-            memory.Push(nextState);
-            return Status.NULL;
         }
     }
 }

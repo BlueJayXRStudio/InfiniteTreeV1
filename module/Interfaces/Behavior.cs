@@ -4,26 +4,31 @@ using UnityEngine;
 
 public abstract class Behavior
 {
-    public GameObject DriverObject;
-    public Behavior(GameObject go) => DriverObject = go;
+    protected TaskStackMachine tree;
+    public IEnumerator<Status> enumerator;
 
-    public abstract Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task);
+    public Behavior(TaskStackMachine tree)
+    {
+        this.tree = tree;
+        enumerator = Run().GetEnumerator();
+    }
+    public abstract IEnumerable<Status> Run();
     public abstract Status CheckRequirement();
 
-    public Status TreeRequirement(Stack<Behavior> memory) {
+    public Status TreeRequirement() {
         Stack<Behavior> tempStack = new();
         Status result = Status.RUNNING;
         
-        while (memory.Count > 0)
+        while (tree.Memory.Count > 0)
         {
-            var task = memory.Pop();
+            var task = tree.Memory.Pop();
             tempStack.Push(task);
             result = task.CheckRequirement();
             if (result != Status.RUNNING) break;
         }
 
         while (tempStack.Count > 0)
-            memory.Push(tempStack.Pop());
+            tree.Memory.Push(tempStack.Pop());
 
         return result;
     }

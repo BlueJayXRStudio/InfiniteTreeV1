@@ -6,34 +6,36 @@ public class FollowParent : Behavior
 {
     private float velocity = 1.0f;
 
-    public FollowParent(GameObject go) : base(go) { }
+    public FollowParent(TaskStackMachine tree) : base(tree) { }
 
     public override Status CheckRequirement()
     {
         throw new System.NotImplementedException();
     }
 
-    public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+    public override IEnumerable<Status> Run()
     {
-        GameObject parent = go.GetComponent<ParentComponent>().GetParent;
+        GameObject parent = tree.MainObject.GetComponent<ParentComponent>().GetParent;
 
         if (parent == null) {
-            return Status.SUCCESS;
+            yield return Status.SUCCESS;
         }
 
-        Vector3 ParentPos = parent.transform.position;
-        Vector3 CurrentPos = go.transform.position;
-        Vector3 diff = ParentPos - CurrentPos;
+        while (true)
+        {
+            Vector3 ParentPos = parent.transform.position;
+            Vector3 CurrentPos = tree.MainObject.transform.position;
+            Vector3 diff = ParentPos - CurrentPos;
 
-        if (diff.magnitude >= 0.02f) {
-            go.transform.position += diff.normalized * velocity * Time.deltaTime;
-        }
-        else {
-            // go.transform.position = parent.transform.position;
-            go.GetComponent<ParentComponent>().iterate();
-        }
+            if (diff.magnitude >= 0.02f) {
+                tree.MainObject.transform.position += diff.normalized * velocity * Time.deltaTime;
+            }
+            else {
+                tree.MainObject.GetComponent<ParentComponent>().iterate();
+            }
 
-        memory.Push(this);
-        return Status.RUNNING;
+            tree.Memory.Push(this);
+            yield return Status.RUNNING;
+        }
     }
 }

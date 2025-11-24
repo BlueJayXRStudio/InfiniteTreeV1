@@ -1,13 +1,30 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace InfiniteTree
 {
-    internal class PurchaseFood : Sequence
+    internal class PurchaseFood : Behavior
     {
-        public PurchaseFood(GameObject go) : base(null, go)
+        public PurchaseFood(TaskStackMachine tree) : base(tree) { }
+
+        public override Status CheckRequirement()
         {
-            Actions.Enqueue(new BeAt(go, ExperimentBlackboard.Instance.GroceryStorePos));
-            Actions.Enqueue(new a_Purchase(go));
+            throw new System.NotImplementedException();
+        }
+
+        public override IEnumerable<Status> Run()
+        {
+            tree.Memory.Push(
+                new Sequence(
+                    tree,
+                    new List<Behavior>()
+                    {
+                        new BeAt(tree, ExperimentBlackboard.Instance.GroceryStorePos),
+                        new a_Purchase(tree)
+                    }
+                )
+            );
+            yield return Status.NULL;
         }
     }
 }

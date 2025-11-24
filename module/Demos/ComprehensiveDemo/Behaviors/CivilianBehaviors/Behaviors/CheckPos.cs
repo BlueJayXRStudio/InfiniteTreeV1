@@ -7,7 +7,7 @@ namespace InfiniteTree
     {
         private (int, int) pos;
 
-        public CheckPos(GameObject go, (int, int) pos) : base(go)
+        public CheckPos(TaskStackMachine tree, (int, int) pos) : base(tree)
         {
             Debug.Log($"Checking if we're at {pos}");
             this.pos = pos;
@@ -15,16 +15,16 @@ namespace InfiniteTree
 
         public override Status CheckRequirement()
         {
-            var currPos = DriverObject.GetComponent<Attributes>().transform.position;
+            var currPos = tree.MainObject.GetComponent<Attributes>().transform.position;
             var diff = new Vector2(currPos.x, currPos.z) - new Vector2(pos.Item1, pos.Item2);
-            if (DriverObject.GetComponent<Attributes>().GetPos == pos && diff.magnitude < 0.1f)
+            if (tree.MainObject.GetComponent<Attributes>().GetPos == pos && diff.magnitude < 0.1f)
                 return Status.SUCCESS;
             return Status.FAILURE;
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            return CheckRequirement();
+            yield return CheckRequirement();
         }
     }
 }

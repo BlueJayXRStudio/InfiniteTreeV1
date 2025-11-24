@@ -14,7 +14,7 @@ public class EMSDriver : MonoBehaviour
 
     void Start()
     {
-        tree.AddBehavior(new EMSControlFlow(gameObject));
+        tree.AddBehavior(new EMSControlFlow(tree));
     }
 
     void Update()

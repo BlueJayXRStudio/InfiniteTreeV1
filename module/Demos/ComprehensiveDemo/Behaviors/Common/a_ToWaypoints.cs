@@ -11,46 +11,42 @@ namespace InfiniteTree
         private List<(int, int)> waypoints;
         private bool with_req = true;
 
-        public a_ToWaypoints(List<(int, int)> waypoints, GameObject go) : base(go) {
+        public a_ToWaypoints(TaskStackMachine tree, List<(int, int)> waypoints) : base(tree) {
             this.waypoints = waypoints;
-            DriverObject = go;
-            velocity = go.GetComponent<Attributes>().MoveSpeed;
+            velocity = tree.MainObject.GetComponent<Attributes>().MoveSpeed;
         }
 
-        public a_ToWaypoints(List<(int, int)> waypoints, GameObject go, bool with_req) : base(go) {
+        public a_ToWaypoints(TaskStackMachine tree, List<(int, int)> waypoints, bool with_req) : base(tree) {
             this.waypoints = waypoints;
-            DriverObject = go;
-            velocity = go.GetComponent<Attributes>().MoveSpeed;
+            velocity = tree.MainObject.GetComponent<Attributes>().MoveSpeed;
             this.with_req = with_req;
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            if (with_req) {
-                var result = TreeRequirement(memory);
-                if (result != Status.RUNNING) {
-                    return result;
+            while (index < waypoints.Count)
+            {
+                if (with_req) {
+                    var result = TreeRequirement();
+                    if (result != Status.RUNNING) {
+                        yield return result;
+                    }
                 }
+
+                Vector3 ParentPos = contruct_position(waypoints[index]);
+                Vector3 CurrentPos = tree.MainObject.transform.position;
+                Vector3 diff = ParentPos - CurrentPos;
+
+                if (diff.magnitude >= 0.02f) 
+                {
+                    tree.MainObject.transform.rotation = Quaternion.LookRotation(diff, Vector3.up);
+                    tree.MainObject.transform.position += diff.normalized * velocity * Time.deltaTime;
+                    tree.Memory.Push(this);
+                    yield return Status.RUNNING;
+                }
+                else index++;
             }
-
-            if (index == waypoints.Count) {
-                Debug.Log("reached the destination");
-                return Status.SUCCESS;
-            }
-
-            Vector3 ParentPos = contruct_position(waypoints[index]);
-            Vector3 CurrentPos = DriverObject.transform.position;
-            Vector3 diff = ParentPos - CurrentPos;
-
-            if (diff.magnitude >= 0.02f) {
-                DriverObject.transform.rotation = Quaternion.LookRotation(diff, Vector3.up);
-                DriverObject.transform.position += diff.normalized * velocity * Time.deltaTime;
-            }
-            else
-                index++;
-
-            memory.Push(this);
-            return Status.RUNNING;
+            yield return Status.SUCCESS;
         }
 
         public void Reset(List<(int, int)> waypoints) {
@@ -58,7 +54,7 @@ namespace InfiniteTree
             index = 0;
         }
 
-        private Vector3 contruct_position ((int, int) wp) => new Vector3(wp.Item1, DriverObject.transform.position.y, wp.Item2);
+        private Vector3 contruct_position ((int, int) wp) => new Vector3(wp.Item1, tree.MainObject.transform.position.y, wp.Item2);
 
         public override Status CheckRequirement()
         {

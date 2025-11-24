@@ -7,16 +7,16 @@ namespace InfiniteTree
     {
         public GameObject Patient;
 
-        public PickUp(GameObject patient) : base(null) {
+        public PickUp(TaskStackMachine tree, GameObject patient) : base(tree) {
             Patient = patient;
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            Patient.transform.position = new Vector3(go.transform.position.x ,Patient.transform.position.y, go.transform.position.z);
-            Patient.transform.SetParent(go.transform);
+            Patient.transform.position = new Vector3(tree.MainObject.transform.position.x ,Patient.transform.position.y, tree.MainObject.transform.position.z);
+            Patient.transform.SetParent(tree.MainObject.transform);
             
-            return Status.SUCCESS;
+            yield return Status.SUCCESS;
         }
 
         public override Status CheckRequirement()

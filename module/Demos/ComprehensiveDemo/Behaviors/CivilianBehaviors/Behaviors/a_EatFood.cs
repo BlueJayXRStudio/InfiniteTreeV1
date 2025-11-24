@@ -6,25 +6,25 @@ namespace InfiniteTree
     public class a_EatFood : Behavior
     {
 
-        public a_EatFood(GameObject go) : base(go) { }
+        public a_EatFood(TaskStackMachine tree) : base(tree) { }
 
         public override Status CheckRequirement()
         {
             throw new System.NotImplementedException();
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            var result = TreeRequirement(memory);
+            var result = TreeRequirement();
             if (result != Status.RUNNING) {
                 Debug.Log($"atomic eat operation early termination result: {result}");
-                return result;
+                yield return result;
             }
 
-            go.GetComponent<Attributes>().FoodItem -= 1;
-            go.GetComponent<Attributes>().Health += 15;
-
-            return Status.SUCCESS;
+            tree.MainObject.GetComponent<Attributes>().FoodItem -= 1;
+            tree.MainObject.GetComponent<Attributes>().Health += 15;
+            yield return Status.SUCCESS;
         }
+
     }
 }

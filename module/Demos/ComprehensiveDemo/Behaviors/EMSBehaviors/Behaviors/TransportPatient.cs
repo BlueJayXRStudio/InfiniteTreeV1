@@ -10,9 +10,8 @@ namespace InfiniteTree
 
         private List<Behavior> ToDo = new();
 
-        public TransportPatient(GameObject driverObject, GameObject patient) : base(driverObject) {
+        public TransportPatient(TaskStackMachine tree, GameObject patient) : base(tree) {
             // Debug.Log("transporting patient!");
-            DriverObject = driverObject;
             Patient = patient;
 
             // ToDo.Add(new ToWaypoints(this.Patient.GetComponent<Attributes>().GetPos));
@@ -20,10 +19,10 @@ namespace InfiniteTree
             // var MoveToPatient = DriverObject.GetComponent<EMSBehaviorFactory>().GetNewMoveBehavior(DriverObject, Patient.GetComponent<Attributes>().GetPos);
             // var MoveToHospital = DriverObject.GetComponent<EMSBehaviorFactory>().GetNewMoveBehavior(DriverObject, ExperimentBlackboard.Instance.HospitalPos);
 
-            ToDo.Add(new MoveTo(DriverObject, Patient.GetComponent<Attributes>().GetPos, false));
-            ToDo.Add(new PickUp(Patient));
-            ToDo.Add(new MoveTo(DriverObject, ExperimentBlackboard.Instance.HospitalPos, false));
-            ToDo.Add(new DropOff(Patient));
+            ToDo.Add(new MoveTo(tree, Patient.GetComponent<Attributes>().GetPos, false));
+            ToDo.Add(new PickUp(tree, Patient));
+            ToDo.Add(new MoveTo(tree, ExperimentBlackboard.Instance.HospitalPos, false));
+            ToDo.Add(new DropOff(tree, Patient));
         }
 
         public override Status CheckRequirement()
@@ -31,16 +30,16 @@ namespace InfiniteTree
             throw new System.NotImplementedException();
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            go.GetComponent<EMSAttributes>().lightsController.transform.gameObject.SetActive(true);
-            if (message == Status.SUCCESS) {
-                go.GetComponent<EMSAttributes>().lightsController.transform.gameObject.SetActive(false);
-                return Status.SUCCESS;
+            tree.MainObject.GetComponent<EMSAttributes>().lightsController.transform.gameObject.SetActive(true);
+            if (tree.LastMessage == Status.SUCCESS) {
+                tree.MainObject.GetComponent<EMSAttributes>().lightsController.transform.gameObject.SetActive(false);
+                yield return Status.SUCCESS;
             }
-            memory.Push(this);
-            memory.Push(new Sequence(ToDo, null));
-            return Status.NULL;
+            tree.Memory.Push(this);
+            tree.Memory.Push(new Sequence(tree, ToDo));
+            yield return Status.NULL;
         }
         
     }

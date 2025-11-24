@@ -6,7 +6,7 @@ namespace InfiniteTree
 {
     public class InTransport : Behavior
     {
-        public InTransport(GameObject go) : base(go)
+        public InTransport(TaskStackMachine tree) : base(tree)
         {
         }
 
@@ -15,7 +15,7 @@ namespace InfiniteTree
             throw new System.NotImplementedException();
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
             throw new System.NotImplementedException();
         }

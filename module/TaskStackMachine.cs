@@ -12,14 +12,14 @@ public enum Status
 
 public class TaskStackMachine
 {
-    public GameObject DriverObject;
+    public GameObject MainObject;
     public Stack<Behavior> Memory;
-    private Status LastMessage = Status.NULL;
-    private Behavior LastTask = null;
+    public Status LastMessage = Status.NULL;
+    public Behavior LastTask = null;
 
     public TaskStackMachine(GameObject go) {
-        DriverObject = go;
         Memory = new();
+        MainObject = go;
     }
 
     public Status Drive() {
@@ -27,7 +27,8 @@ public class TaskStackMachine
             return LastMessage;
 
         var curr_task = Memory.Pop();
-        LastMessage = curr_task.Step(Memory, DriverObject, LastMessage, LastTask);
+        curr_task.enumerator.MoveNext();
+        LastMessage = curr_task.enumerator.Current;
         LastTask = curr_task;
 
         return LastMessage;

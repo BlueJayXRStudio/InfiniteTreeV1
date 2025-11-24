@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class RotateBehavior : Behavior
 {
-    public RotateBehavior(GameObject go) : base(go) {}
-    
+    public RotateBehavior(TaskStackMachine tree) : base(tree) {}
+
     public override Status CheckRequirement()
     {
         throw new System.NotImplementedException();
     }
 
-    public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+    public override IEnumerable<Status> Run()
     {
-        go.transform.rotation = Quaternion.Euler(0, 180 * Time.deltaTime, 0) * go.transform.rotation;
-        memory.Push(this);
-        return Status.RUNNING;
+        tree.MainObject.transform.rotation = Quaternion.Euler(0, 180 * Time.deltaTime, 0) * tree.MainObject.transform.rotation;
+        tree.Memory.Push(this);
+        yield return Status.RUNNING;
     }
 }

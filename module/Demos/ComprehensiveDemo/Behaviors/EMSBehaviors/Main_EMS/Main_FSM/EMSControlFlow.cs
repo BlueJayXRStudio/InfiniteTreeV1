@@ -6,18 +6,21 @@ namespace InfiniteTree
 {
     public class EMSControlFlow : Behavior
     {
-        public EMSControlFlow(GameObject go) : base(go) { }
+        public EMSControlFlow(TaskStackMachine tree) : base(tree) { }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            memory.Push(this);
-            GameObject Call = ExperimentBlackboard.Instance.GetCall;
-            
-            if (Call != null)
-                memory.Push(new TransportPatient(go, Call));
-                return Status.NULL;
-
-            return Status.RUNNING;
+            while (true)
+            {
+                GameObject Call = ExperimentBlackboard.Instance.GetCall;
+                
+                tree.Memory.Push(this);
+                if (Call != null)
+                    tree.Memory.Push(new TransportPatient(tree, Call));
+                
+                yield return Status.NULL;
+                
+            }
         }
 
         public override Status CheckRequirement()

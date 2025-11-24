@@ -5,25 +5,23 @@ namespace InfiniteTree
 {
     internal class a_Purchase : Behavior
     {
-        public a_Purchase(GameObject go) : base(go)
-        {
-        }
+        public a_Purchase(TaskStackMachine tree) : base(tree) { }
 
         public override Status CheckRequirement()
         {
             throw new System.NotImplementedException();
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            var result = TreeRequirement(memory);
+            var result = TreeRequirement();
             if (result != Status.RUNNING) {
-                return result;
+                yield return result;
             }
 
-            go.GetComponent<Attributes>().FoodItem += 1;
-            go.GetComponent<Attributes>().Cash -= 15;
-            return Status.SUCCESS;
+            tree.MainObject.GetComponent<Attributes>().FoodItem += 1;
+            tree.MainObject.GetComponent<Attributes>().Cash -= 15;
+            yield return Status.SUCCESS;
         }
     }
 }

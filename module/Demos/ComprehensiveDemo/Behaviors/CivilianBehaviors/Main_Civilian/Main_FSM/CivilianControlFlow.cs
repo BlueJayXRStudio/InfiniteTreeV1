@@ -9,27 +9,28 @@ namespace InfiniteTree
     {
         Behavior CurrentTask;
 
-        public CivilianControlFlow(GameObject go) : base(go) {}
+        public CivilianControlFlow(TaskStackMachine tree) : base(tree) {}
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            // push this state immediately back in, because we know
-            // we will always come back to this state.
-            memory.Push(this); 
+            while (true)
+            {
+                // push this state immediately back in, because we know
+                // we will always come back to this state.
+                tree.Memory.Push(this);
 
-            if (go.GetComponent<Attributes>().Health < 80) {
-                // EatBehavior is a Behavior Tree. Conventionally, it wouldn't
-                // be possible to run a Behavior Tree from a state in a state
-                // machine, but by treating each behavior as a stackable task
-                // we can achieve a general engine capable of switching between
-                // an FSM and a Behavior Tree.
-                CurrentTask = new EatBehavior(go);
-                memory.Push(CurrentTask);
-                Debug.Log("Need to Eat Food. Will Try Eating Food");
-                return Status.NULL;
+                if (tree.MainObject.GetComponent<Attributes>().Health < 80) {
+                    // EatBehavior is a Behavior Tree. Conventionally, it wouldn't
+                    // be possible to run a Behavior Tree from a state in a state
+                    // machine, but by treating each behavior as a stackable task
+                    // we can achieve a general engine capable of switching between
+                    // an FSM and a Behavior Tree.
+                    tree.Memory.Push(new EatBehavior(tree));
+                    Debug.Log("Need to Eat Food. Will Try Eating Food");
+                }
+
+                yield return Status.NULL;
             }
-            
-            return Status.RUNNING;
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace InfiniteTree
         public override Status CheckRequirement()
         {
             if (CurrentTask is EatBehavior) {
-                if (DriverObject.GetComponent<Attributes>().Health >= 80)
+                if (tree.MainObject.GetComponent<Attributes>().Health >= 80)
                     return Status.SUCCESS;
                 return Status.RUNNING;
             }

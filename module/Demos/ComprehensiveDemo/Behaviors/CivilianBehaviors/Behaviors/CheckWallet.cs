@@ -5,18 +5,18 @@ namespace InfiniteTree
 {
     public class CheckWallet : Behavior
     {
-        public CheckWallet(GameObject go) : base(go) => Debug.Log("Checking Wallet");
+        public CheckWallet(TaskStackMachine tree) : base(tree) => Debug.Log("Checking Wallet");
 
         public override Status CheckRequirement()
         {
-            if (DriverObject.GetComponent<Attributes>().Cash >= 25)
+            if (tree.MainObject.GetComponent<Attributes>().Cash >= 25)
                 return Status.SUCCESS;
             return Status.FAILURE;
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            return CheckRequirement();
+            yield return CheckRequirement();
         }
     }
 }

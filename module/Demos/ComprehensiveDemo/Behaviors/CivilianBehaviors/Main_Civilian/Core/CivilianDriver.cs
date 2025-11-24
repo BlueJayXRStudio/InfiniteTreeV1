@@ -19,7 +19,7 @@ public class CivilianDriver : MonoBehaviour
 
     void Start()
     {
-        tree.AddBehavior(new CivilianControlFlow(gameObject));
+        tree.AddBehavior(new CivilianControlFlow(tree));
         HealthStates.AddBehavior((CivilianIdle) GetComponent<CivilianBehaviorFactory>().GetState(typeof(CivilianIdle), gameObject));
     }
 
@@ -32,7 +32,7 @@ public class CivilianDriver : MonoBehaviour
     public void ResetTree()
     {
         tree.Memory = new Stack<Behavior>();
-        tree.AddBehavior(new CivilianControlFlow(gameObject));
+        tree.AddBehavior(new CivilianControlFlow(tree));
     }
 
     public void SwitchTree() => treePaused = !treePaused;

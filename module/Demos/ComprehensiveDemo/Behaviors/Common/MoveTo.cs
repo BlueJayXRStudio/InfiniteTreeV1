@@ -12,13 +12,11 @@ namespace InfiniteTree
         bool with_req = true;
         bool Finished = false;
 
-        public MoveTo(GameObject go, (int, int) dest) : base(go) {
-            DriverObject = go;
+        public MoveTo(TaskStackMachine tree, (int, int) dest) : base(tree) {
             destination = dest;
         }
 
-        public MoveTo(GameObject go, (int, int) dest, bool with_req) : base(go) {
-            DriverObject = go;
+        public MoveTo(TaskStackMachine tree, (int, int) dest, bool with_req) : base(tree) {
             destination = dest;
             this.with_req = with_req;
         }
@@ -29,18 +27,16 @@ namespace InfiniteTree
             return Status.FAILURE;
         }
 
-        public override Status Step(Stack<Behavior> memory, GameObject go, Status message, Behavior last_task)
+        public override IEnumerable<Status> Run()
         {
-            if (!(message == Status.RUNNING || message == Status.NULL)) {
-                Finished = true;
-                return message;
-            }
+            var waypoints = ExperimentBlackboard.Instance.ShortestPath(ExperimentBlackboard.Instance.map, tree.MainObject.GetComponent<Attributes>().GetPos, destination);
+            moveTo ??= !with_req ? new a_ToWaypoints(tree, waypoints, with_req) : new a_ToWaypoints(tree, waypoints);
+            tree.Memory.Push(this);
+            tree.Memory.Push(moveTo);
+            yield return Status.NULL;
 
-            var waypoints = ExperimentBlackboard.Instance.ShortestPath(ExperimentBlackboard.Instance.map, go.GetComponent<Attributes>().GetPos, destination);
-            moveTo ??= !with_req ? new a_ToWaypoints(waypoints, go, with_req) : new a_ToWaypoints(waypoints, go);
-            memory.Push(this);
-            memory.Push(moveTo);
-            return Status.NULL;
+            Finished = true;
+            yield return tree.LastMessage;
         }
 
     }
