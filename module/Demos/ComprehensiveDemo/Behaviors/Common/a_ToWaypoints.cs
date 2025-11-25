@@ -28,6 +28,14 @@ namespace InfiniteTree
             {
                 if (with_req) {
                     var result = TreeRequirement();
+
+                    // string print_string = "";
+                    // foreach (var task in tree.Memory)
+                    // {
+                    //     print_string += "{ " + task.ToString() + ", " + task.CheckRequirement() + " } ";
+                    // }
+                    // Debug.Log(print_string);
+
                     if (result != Status.RUNNING) {
                         yield return result;
                     }
