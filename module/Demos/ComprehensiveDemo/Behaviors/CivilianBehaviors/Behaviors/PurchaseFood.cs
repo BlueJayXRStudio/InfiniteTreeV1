@@ -3,28 +3,14 @@ using UnityEngine;
 
 namespace InfiniteTree
 {
-    internal class PurchaseFood : Behavior
+    internal class PurchaseFood : Sequence
     {
-        public PurchaseFood(TaskStackMachine tree) : base(tree) { }
-
-        public override Status CheckRequirement()
+        public PurchaseFood(TaskStackMachine tree) : base(tree, null)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override IEnumerable<Status> Run()
-        {
-            tree.Memory.Push(
-                new Sequence(
-                    tree,
-                    new List<Behavior>()
-                    {
-                        new BeAt(tree, ExperimentBlackboard.Instance.GroceryStorePos),
-                        new a_Purchase(tree)
-                    }
-                )
-            );
-            yield return Status.NULL;
+            Tasks = new List<Behavior>() {
+                new BeAt(tree, ExperimentBlackboard.Instance.GroceryStorePos),
+                new a_Purchase(tree)
+            };
         }
     }
 }

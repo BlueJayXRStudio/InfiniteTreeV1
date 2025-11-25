@@ -10,7 +10,6 @@ public class Selector : Behavior
     protected int idx = 0;
 
     public Selector(TaskStackMachine tree, List<Behavior> tasks) : base(tree) {
-        if (tasks == null) return;
         Tasks = tasks;
     }
 
@@ -21,13 +20,12 @@ public class Selector : Behavior
             tree.Memory.Push(this);
             tree.Memory.Push(Tasks[idx]);
             yield return Status.NULL;
-            
+            idx++;
             if (tree.LastMessage == Status.SUCCESS)
             {
                 Finished = true;
                 yield return Status.SUCCESS;
             }
-            idx++;
         }
         Finished = true;
         yield return Status.FAILURE;

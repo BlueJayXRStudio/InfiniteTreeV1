@@ -23,12 +23,21 @@ public class Demo_2_Driver : MonoBehaviour
         int partition = 2;
 
         for (int i = 0; i < partition; i++) {
-            Test_Sequence.Add(new Parallel(tree, new List<Behavior>() { new ToWaypoint(tree, Waypoints[i]), new RotateBehavior(tree) }));
+            Test_Sequence.Add(
+                new Parallel(
+                    tree, 
+                    new List<Behavior>() 
+                    { 
+                        new ToWaypoint(null, Waypoints[i]), 
+                        new RotateBehavior(null) 
+                    }
+                )
+            );
         }
         for (int i = partition; i < Waypoints.Count; i++) {
             Test_Sequence.Add(new ToWaypoint(tree, Waypoints[i]));
         }
-
+        
         tree.AddBehavior(new Sequence(tree, Test_Sequence));
     }
 

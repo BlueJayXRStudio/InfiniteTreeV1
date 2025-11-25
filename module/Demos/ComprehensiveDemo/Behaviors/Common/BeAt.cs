@@ -3,30 +3,19 @@ using UnityEngine;
 
 namespace InfiniteTree
 {
-    internal class BeAt : Behavior
+    internal class BeAt : Selector
     {
         protected (int, int) pos;
         
-        public BeAt(TaskStackMachine tree, (int, int) pos) : base(tree) { }
-
-        public override Status CheckRequirement()
-        {
-            throw new System.NotImplementedException();
+        public BeAt(TaskStackMachine tree, (int, int) pos) : base(tree, null) 
+        { 
+            this.pos = pos;
+            Tasks = new List<Behavior>()
+            {
+                new CheckPos(tree, pos),
+                new MoveTo(tree, pos)
+            };
         }
 
-        public override IEnumerable<Status> Run()
-        {
-            tree.Memory.Push(
-                new Selector(
-                    tree,
-                    new List<Behavior>()
-                    {
-                        new CheckPos(tree, pos),
-                        new MoveTo(tree, pos)
-                    }
-                )
-            );
-            yield return Status.NULL;
-        }
     }
 }

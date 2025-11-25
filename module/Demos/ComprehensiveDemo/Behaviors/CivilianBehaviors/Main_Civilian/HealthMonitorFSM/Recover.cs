@@ -28,7 +28,7 @@ namespace InfiniteTree
                     Debug.Log("Recovered and resuming activity");
                     tree.MainObject.GetComponent<CivilianDriver>().SwitchTree();
                     tree.MainObject.GetComponent<CivilianDriver>().ResetTree();
-                    nextState = (CivilianIdle) tree.MainObject.GetComponent<CivilianBehaviorFactory>().GetState(typeof(CivilianIdle), tree.MainObject);
+                    nextState = (CivilianIdle) tree.MainObject.GetComponent<CivilianTaskCache>().GetState(typeof(CivilianIdle), tree);
                 }
                 
                 tree.MainObject.GetComponent<Attributes>().Health += 10f * Time.deltaTime;

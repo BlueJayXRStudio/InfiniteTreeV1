@@ -24,7 +24,7 @@ namespace InfiniteTree
 
                 if (tree.MainObject.GetComponent<CivilianAttributes>().ForceWake) {
                     Debug.Log("Waking up. Starting Recovery :D");
-                    nextState = (Recover) tree.MainObject.GetComponent<CivilianBehaviorFactory>().GetState(typeof(Recover), tree.MainObject);
+                    nextState = (Recover) tree.MainObject.GetComponent<CivilianTaskCache>().GetState(typeof(Recover), tree);
                 }
 
                 tree.Memory.Push(nextState);

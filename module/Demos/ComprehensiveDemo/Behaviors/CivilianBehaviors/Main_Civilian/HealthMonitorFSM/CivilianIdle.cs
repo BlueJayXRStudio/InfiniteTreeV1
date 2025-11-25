@@ -28,7 +28,7 @@ namespace InfiniteTree
                     // Pause main control flow tree. An unconscious person most likely would not be thinking :O
                     tree.MainObject.GetComponent<CivilianDriver>().SwitchTree();
                     // Set next state as "Unconscious"
-                    nextState = (Unconscious) tree.MainObject.GetComponent<CivilianBehaviorFactory>().GetState(typeof(Unconscious), tree.MainObject);
+                    nextState = (Unconscious) tree.MainObject.GetComponent<CivilianTaskCache>().GetState(typeof(Unconscious), tree);
                 }
                 // By only pushing the next state, we ensure that the next state will be on top of the stack memory.
                 tree.Memory.Push(nextState);

@@ -18,6 +18,7 @@ namespace InfiniteTree
                 // push this state immediately back in, because we know
                 // we will always come back to this state.
                 tree.Memory.Push(this);
+                CurrentTask = this;
 
                 if (tree.MainObject.GetComponent<Attributes>().Health < 80) {
                     // EatBehavior is a Behavior Tree. Conventionally, it wouldn't
@@ -25,8 +26,9 @@ namespace InfiniteTree
                     // machine, but by treating each behavior as a stackable task
                     // we can achieve a general engine capable of switching between
                     // an FSM and a Behavior Tree.
-                    tree.Memory.Push(new EatBehavior(tree));
                     Debug.Log("Need to Eat Food. Will Try Eating Food");
+                    CurrentTask = new EatBehavior(tree);
+                    tree.Memory.Push(CurrentTask);
                 }
 
                 yield return Status.NULL;
@@ -46,7 +48,5 @@ namespace InfiniteTree
             }
             return Status.RUNNING;
         }
-
-        
     }
 }

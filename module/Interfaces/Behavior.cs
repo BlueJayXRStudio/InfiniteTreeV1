@@ -12,6 +12,9 @@ public abstract class Behavior
         this.tree = tree;
         enumerator = Run().GetEnumerator();
     }
+    
+    public void SetTree(TaskStackMachine _tree) => tree=_tree;
+
     public abstract IEnumerable<Status> Run();
     public abstract Status CheckRequirement();
 

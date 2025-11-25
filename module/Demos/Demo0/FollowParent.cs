@@ -15,14 +15,14 @@ public class FollowParent : Behavior
 
     public override IEnumerable<Status> Run()
     {
-        GameObject parent = tree.MainObject.GetComponent<ParentComponent>().GetParent;
-
-        if (parent == null) {
-            yield return Status.SUCCESS;
-        }
-
         while (true)
         {
+            GameObject parent = tree.MainObject.GetComponent<ParentComponent>().GetParent;
+
+            if (parent == null) {
+                yield return Status.SUCCESS;
+            }
+            
             Vector3 ParentPos = parent.transform.position;
             Vector3 CurrentPos = tree.MainObject.transform.position;
             Vector3 diff = ParentPos - CurrentPos;

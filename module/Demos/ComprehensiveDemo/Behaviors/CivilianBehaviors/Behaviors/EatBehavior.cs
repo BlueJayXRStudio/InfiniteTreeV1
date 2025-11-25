@@ -4,28 +4,15 @@ using UnityEngine;
 
 namespace InfiniteTree
 {
-    public class EatBehavior : Behavior
+    public class EatBehavior : Sequence
     {        
-        public EatBehavior(TaskStackMachine tree) : base(tree) { }
-
-        public override Status CheckRequirement()
+        public EatBehavior(TaskStackMachine tree) : base(tree, null)
         {
-            throw new System.NotImplementedException();
+            Tasks = new List<Behavior>() {
+                new CheckFood(tree),
+                new a_EatFood(tree)
+            };
         }
 
-        public override IEnumerable<Status> Run()
-        {
-            tree.Memory.Push(
-                new Sequence(
-                    tree,
-                    new List<Behavior>()
-                    {
-                        new CheckFood(tree),
-                        new a_EatFood(tree)
-                    }
-                )
-            );
-            yield return Status.NULL;
-        }
     }
 }

@@ -18,7 +18,9 @@ namespace InfiniteTree
             var currPos = tree.MainObject.GetComponent<Attributes>().transform.position;
             var diff = new Vector2(currPos.x, currPos.z) - new Vector2(pos.Item1, pos.Item2);
             if (tree.MainObject.GetComponent<Attributes>().GetPos == pos && diff.magnitude < 0.1f)
+            {
                 return Status.SUCCESS;
+            }
             return Status.FAILURE;
         }
 

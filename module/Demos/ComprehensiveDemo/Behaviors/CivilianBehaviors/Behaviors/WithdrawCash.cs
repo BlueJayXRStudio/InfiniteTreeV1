@@ -3,31 +3,15 @@ using UnityEngine;
 
 namespace InfiniteTree
 {
-    public class WithdrawCash : Behavior
+    public class WithdrawCash : Sequence
     {
-        public WithdrawCash(TaskStackMachine tree) : base(tree)
+        public WithdrawCash(TaskStackMachine tree) : base(tree, null)
         {
             Debug.Log("Need To Withdraw Cash");
-        }
-
-        public override Status CheckRequirement()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override IEnumerable<Status> Run()
-        {
-            tree.Memory.Push(
-                new Sequence(
-                    tree,
-                    new List<Behavior>()
-                    {
-                        new BeAt(tree, ExperimentBlackboard.Instance.ATMPos),
-                        new a_Withdraw(tree)
-                    }
-                )
-            );
-            yield return Status.NULL;
+            Tasks = new List<Behavior>() {
+                new BeAt(tree, ExperimentBlackboard.Instance.ATMPos),
+                new a_Withdraw(tree)
+            };
         }
     }
 }

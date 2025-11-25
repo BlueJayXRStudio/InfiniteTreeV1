@@ -13,8 +13,11 @@ public class RotateBehavior : Behavior
 
     public override IEnumerable<Status> Run()
     {
-        tree.MainObject.transform.rotation = Quaternion.Euler(0, 180 * Time.deltaTime, 0) * tree.MainObject.transform.rotation;
-        tree.Memory.Push(this);
-        yield return Status.RUNNING;
+        while (true)
+        {
+            tree.MainObject.transform.rotation = Quaternion.Euler(0, 180 * Time.deltaTime, 0) * tree.MainObject.transform.rotation;
+            tree.Memory.Push(this);
+            yield return Status.RUNNING;
+        }
     }
 }

@@ -41,10 +41,11 @@ namespace InfiniteTree
                 {
                     tree.MainObject.transform.rotation = Quaternion.LookRotation(diff, Vector3.up);
                     tree.MainObject.transform.position += diff.normalized * velocity * Time.deltaTime;
-                    tree.Memory.Push(this);
-                    yield return Status.RUNNING;
                 }
                 else index++;
+                
+                tree.Memory.Push(this);
+                yield return Status.RUNNING;
             }
             yield return Status.SUCCESS;
         }

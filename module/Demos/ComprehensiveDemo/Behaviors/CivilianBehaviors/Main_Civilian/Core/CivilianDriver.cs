@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using InfiniteTree;
@@ -20,7 +21,7 @@ public class CivilianDriver : MonoBehaviour
     void Start()
     {
         tree.AddBehavior(new CivilianControlFlow(tree));
-        HealthStates.AddBehavior((CivilianIdle) GetComponent<CivilianBehaviorFactory>().GetState(typeof(CivilianIdle), gameObject));
+        HealthStates.AddBehavior((CivilianIdle) GetComponent<CivilianTaskCache>().GetState(typeof(CivilianIdle), HealthStates));
     }
 
     void Update()

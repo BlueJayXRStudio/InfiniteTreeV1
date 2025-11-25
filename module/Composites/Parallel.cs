@@ -9,9 +9,10 @@ public class Parallel : Behavior
 
     public Parallel(TaskStackMachine tree, List<Behavior> ParallelActions) : base(tree) {
         trees = new();
-        foreach (Behavior action in ParallelActions) {
+        foreach (Behavior _action in ParallelActions) {
             var _tree = new TaskStackMachine(tree.MainObject);
-            _tree.AddBehavior(action);
+            _action.SetTree(_tree);
+            _tree.AddBehavior(_action);
             trees.Add(_tree);
         }
     }
@@ -23,14 +24,17 @@ public class Parallel : Behavior
 
     public override IEnumerable<Status> Run()
     {
-        foreach (TaskStackMachine _tree in trees) {
-            var result = _tree.Drive();
-            if (result != Status.RUNNING) {
-                yield return result;
+        while (true)
+        {
+            foreach (TaskStackMachine _tree in trees) {
+                var result = _tree.Drive();
+                if (result == Status.SUCCESS || result == Status.FAILURE) 
+                {
+                    yield return result;
+                }
             }
+            tree.Memory.Push(this);
+            yield return Status.RUNNING;
         }
-
-        tree.Memory.Push(this);
-        yield return Status.RUNNING;
     }
 }

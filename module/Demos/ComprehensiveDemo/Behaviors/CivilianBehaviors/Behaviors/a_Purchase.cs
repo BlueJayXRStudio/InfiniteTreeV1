@@ -5,7 +5,7 @@ namespace InfiniteTree
 {
     internal class a_Purchase : Behavior
     {
-        public a_Purchase(TaskStackMachine tree) : base(tree) { }
+        public a_Purchase(TaskStackMachine tree) : base(tree) { Debug.Log("Finalizing Purchase!"); }
 
         public override Status CheckRequirement()
         {

@@ -9,8 +9,9 @@ namespace InfiniteTree
 
         public override Status CheckRequirement()
         {
-            if (tree.MainObject.GetComponent<Attributes>().Cash >= 25)
+            if (tree.MainObject.GetComponent<Attributes>().Cash >= 25) {
                 return Status.SUCCESS;
+            }
             return Status.FAILURE;
         }
 

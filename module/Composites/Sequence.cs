@@ -10,7 +10,6 @@ public class Sequence : Behavior
     protected int idx = 0;
 
     public Sequence(TaskStackMachine tree, List<Behavior> tasks) : base(tree) {
-        if (tasks == null) return;
         Tasks = tasks;
     }
 
@@ -21,13 +20,13 @@ public class Sequence : Behavior
             tree.Memory.Push(this);
             tree.Memory.Push(Tasks[idx]);
             yield return Status.NULL;
-            
+            idx++;
             if (tree.LastMessage == Status.FAILURE)
             {
                 Finished = true;
                 yield return Status.FAILURE;
             }
-            idx++;
+            
         }
         Finished = true;
         yield return Status.SUCCESS;
@@ -43,7 +42,6 @@ public class Sequence : Behavior
             if (result != Status.SUCCESS)
                 return Status.FAILURE;
         }
-
         return Status.RUNNING;
     }
 

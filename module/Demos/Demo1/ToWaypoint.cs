@@ -19,13 +19,12 @@ public class ToWaypoint : Behavior
 
     public override IEnumerable<Status> Run()
     {        
-        // Debug.Log("Traveling to Way Point");
-        
-        if (!waypoint.activeSelf) {
-            yield return Status.FAILURE;
-        }
-
         while (true) {
+            // Debug.Log("Traveling to Way Point");
+            if (!waypoint.activeSelf) {
+                yield return Status.FAILURE;
+            }
+
             Vector3 ParentPos = waypoint.transform.position;
             Vector3 CurrentPos = tree.MainObject.transform.position;
             Vector3 diff = ParentPos - CurrentPos;
@@ -35,7 +34,10 @@ public class ToWaypoint : Behavior
                 tree.Memory.Push(this);
                 yield return Status.RUNNING;
             }
-            else yield return Status.SUCCESS;
+            else 
+            {
+                yield return Status.SUCCESS;
+            }
         }
     }
 }
