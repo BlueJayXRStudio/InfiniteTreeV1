@@ -5,8 +5,6 @@ namespace InfiniteTree
 {
     public class GetFood : Sequence
     {
-        protected Sequence sequence;
-
         public GetFood(TaskStackMachine tree) : base(tree, null)
         {
             Tasks = new List<Behavior>() {

@@ -19368,8 +19368,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 100
-  Cash: 50
-  FoodItem: 1
+  Cash: 5
+  FoodItem: 0
   MoveSpeed: 1
   c_Green: {r: 0, g: 0, b: 0, a: 0}
   c_Red: {r: 0, g: 0, b: 0, a: 0}

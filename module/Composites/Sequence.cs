@@ -26,7 +26,6 @@ public class Sequence : Behavior
                 Finished = true;
                 yield return Status.FAILURE;
             }
-            
         }
         Finished = true;
         yield return Status.SUCCESS;
