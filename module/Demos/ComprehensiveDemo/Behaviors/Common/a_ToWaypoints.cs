@@ -29,11 +29,12 @@ namespace InfiniteTree
                 if (with_req) {
                     var result = TreeRequirement();
 
-                    // string print_string = "";
+                    // string print_string = $"[a_ToWaypoints.cs {tree.MainObject.name}] [No. tasks in Memory: {tree.Memory.Count}] [";
                     // foreach (var task in tree.Memory)
                     // {
-                    //     print_string += "{ " + task.ToString() + ", " + task.CheckRequirement() + " } ";
+                    //     print_string += " ( " + task.ToString() + ", " + task.CheckRequirement() + " ), ";
                     // }
+                    // print_string += "]";
                     // Debug.Log(print_string);
 
                     if (result != Status.RUNNING) {
